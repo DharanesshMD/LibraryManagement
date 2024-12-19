@@ -209,12 +209,14 @@ export class UserDashboardComponent implements OnInit {
   }
 
   private setupSubscriptions() {
-    if (!this.userId) return; // Guard against undefined userId
+    if (!this.userId) return;
     
+    // Subscribe to available books
     const booksSub = this.bookService.getBooks().subscribe(books => {
       this.availableBooks = books;
     });
 
+    // Subscribe to borrowed books with the new format
     const borrowedSub = this.bookService.getBorrowedBooksObservable(this.userId)
       .subscribe(borrowedBooks => {
         this.borrowedBooks = borrowedBooks;
@@ -255,6 +257,9 @@ export class UserDashboardComponent implements OnInit {
 
     if (copiesToBorrow > 0 && copiesToBorrow <= maxAllowed) {
       this.bookService.borrowBook(this.userId, book.id, copiesToBorrow).subscribe({
+        next: () => {
+          // Success case - the UI will update automatically through the subscription
+        },
         error: (err) => {
           console.error('Error borrowing book:', err);
           alert('Failed to borrow book. Please try again.');
@@ -283,6 +288,9 @@ export class UserDashboardComponent implements OnInit {
           borrowedBook.book.title
         )
         .subscribe({
+          next: () => {
+            // Success case - the UI will update automatically through the subscription
+          },
           error: err => {
             console.error('Error returning book:', err);
             alert('Failed to return book. Please try again.');
@@ -291,7 +299,7 @@ export class UserDashboardComponent implements OnInit {
     } else {
       alert('Invalid quantity.');
     }
-  }  
+  }
   
   private loadAvailableBooks() {
     this.bookService.getBooks().subscribe((books) => {

@@ -99,8 +99,8 @@ export class AdminDashboardComponent implements OnInit {
             userName: user.userName,
             bookId: status.bookId,
             bookTitle: this.getBookTitle(status.bookId),
-            quantity: status.totalBorrowed / status.borrowedBy.length, 
-            borrowDate: new Date(), 
+            quantity: user.quantity, // Now using the exact quantity per user
+            borrowDate: new Date()
           });
         });
       });
