@@ -1,0 +1,184 @@
+<div class="admin-dashboard">
+
+  <!-- Profile Section -->
+  <!-- <mat-card>
+    <h2>Profile Details</h2>
+    <p><strong>Name:</strong> {{ adminProfile?.name }} <span>({{ adminProfile?.role }})</span></p>
+    <p><strong>Email:</strong> {{ adminProfile?.email }}</p>
+    <p>
+      <strong>Password:</strong> 
+      <span class="password" *ngIf="!showPassword">{{ maskedPassword }}</span>
+      <span class="password" *ngIf="showPassword">{{ adminProfile?.password }}</span>
+      <button mat-button color="primary" (click)="togglePasswordVisibility()">
+        {{ showPassword ? 'Hide' : 'Show' }}
+      </button>
+    </p>
+  </mat-card> -->
+
+  <mat-card *ngIf="adminProfile">
+  <h2>Profile Details</h2>
+  <div class="profile-header">
+    <p>
+      <strong>Name:</strong>
+      <span class="right" *ngIf="!isEditingProfile">{{ adminProfile.name }}</span>
+      <input class="right" *ngIf="isEditingProfile" [(ngModel)]="adminProfile.name" />
+    </p>
+    <p>
+      <strong>Email:</strong>
+      <span class="right" *ngIf="!isEditingProfile">{{ adminProfile.email }}</span>
+      <input class="right" *ngIf="isEditingProfile" [(ngModel)]="adminProfile.email" />
+    </p>
+    <p>
+      <strong>Password:</strong>
+      <span class="right" *ngIf="!isEditingProfile">{{ maskedPassword }}</span>
+      <input class="right" *ngIf="isEditingProfile" type="password" [(ngModel)]="adminProfile.password" />
+    </p>
+    <svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  (click)="toggleEditProfile()"
+  title="Edit Profile"
+  style="cursor: pointer; float: left; width: 20px; height: 20px; margin-top: -170px; margin-left: 180px;"
+>
+  <path
+    d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"
+  ></path>
+</svg>
+
+  </div>
+  <button *ngIf="isEditingProfile" mat-raised-button color="primary" (click)="saveProfile()">Save</button>
+  <button *ngIf="isEditingProfile" mat-raised-button color="warn" (click)="cancelEdit()">Cancel</button>
+</mat-card>
+
+  
+  
+  
+
+  <!-- Existing Manage Books Section -->
+  <mat-card>
+    <h2>Manage Books</h2>
+    <form (ngSubmit)="addBook()">
+      <mat-form-field appearance="fill">
+        <mat-label>Book Title</mat-label>
+        <input matInput [(ngModel)]="newBook.title" name="title" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Author</mat-label>
+        <input matInput [(ngModel)]="newBook.author" name="author" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Available Copies</mat-label>
+        <input matInput type="number" [(ngModel)]="newBook.availableCopies" name="availableCopies" required />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">Add Book</button>
+    </form>
+  </mat-card>
+
+  <!-- Existing Books List Section -->
+  <mat-card>
+    <h2>Books List</h2>
+    <table mat-table [dataSource]="books" class="mat-elevation-z8">
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Title </th>
+        <td mat-cell *matCellDef="let book"> {{ book.title }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef> Author </th>
+        <td mat-cell *matCellDef="let book"> {{ book.author }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="availableCopies">
+        <th mat-header-cell *matHeaderCellDef> Available Copies </th>
+        <td mat-cell *matCellDef="let book"> {{ book.availableCopies }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let book">
+          <button mat-raised-button color="primary" (click)="openEditDialog(book)">Edit</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card>
+
+  <mat-card>
+    <h2>Currently Borrowed Books</h2>
+  <table mat-table [dataSource]="borrowedBooks" class="mat-elevation-z8">
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef> User Name </th>
+      <td mat-cell *matCellDef="let record">
+        <a (click)="openEditUserDialog(record.userId)" style="cursor: pointer; text-decoration: underline; color: rgb(0, 62, 231);">
+          {{ record.userName }}
+        </a>
+      </td>
+    </ng-container>
+  
+      <ng-container matColumnDef="bookTitle">
+        <th mat-header-cell *matHeaderCellDef> Book Title </th>
+        <td mat-cell *matCellDef="let record"> 
+          {{ record.bookTitle }}
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef> Quantity </th>
+        <td mat-cell *matCellDef="let record"> {{ record.quantity }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="borrowDate">
+        <th mat-header-cell *matHeaderCellDef> Borrow Date </th>
+        <td mat-cell *matCellDef="let record"> {{ record.borrowDate | date:'short' }} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="borrowedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: borrowedColumns;"></tr>
+    </table>
+  
+    <div *ngIf="borrowedBooks.length === 0" class="no-records">
+      <p>No books are currently borrowed.</p>
+    </div>
+  </mat-card>
+  
+
+  <mat-card>
+    <h2>Returned Books</h2>
+  <table mat-table [dataSource]="returnedDetails" class="mat-elevation-z8">
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef> User Name </th>
+      <td mat-cell *matCellDef="let detail">
+        <a (click)="openEditUserDialog(detail.userId)" style="cursor: pointer; text-decoration: underline; color: rgb(0, 62, 231);">
+          {{ detail.userName }}
+        </a>
+      </td>
+    </ng-container>
+  
+      <ng-container matColumnDef="bookName">
+        <th mat-header-cell *matHeaderCellDef> Book Title </th>
+        <td mat-cell *matCellDef="let detail"> {{ detail.bookName }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef> Quantity </th>
+        <td mat-cell *matCellDef="let detail"> {{ detail.quantity }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="returnDate">
+        <th mat-header-cell *matHeaderCellDef> Return Date </th>
+        <td mat-cell *matCellDef="let detail"> {{ detail.returnDate | date:'short' }} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="returnedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: returnedColumns;"></tr>
+    </table>
+  </mat-card>
+  
+  
+  
+</div>

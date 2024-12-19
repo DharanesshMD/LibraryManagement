@@ -1,0 +1,10 @@
+<mat-toolbar color="primary">
+    <span>Library Management</span>
+    <span class="spacer"></span>
+    <a mat-button routerLink="/login">Login</a>
+    <a mat-button routerLink="/register">Register</a>
+    <a mat-button *ngIf="isAdmin()" routerLink="/admin">Admin Dashboard</a>
+    <a mat-button *ngIf="isUser()" routerLink="/user">User Dashboard</a>
+    <button mat-button *ngIf="isLoggedIn()" (click)="logout()">Logout</button>
+  </mat-toolbar>
+  

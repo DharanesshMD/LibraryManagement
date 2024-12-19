@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Edit Book</h2>
+<mat-dialog-content>
+  <form>
+    <mat-form-field appearance="fill">
+      <mat-label>Book Title</mat-label>
+      <input matInput [(ngModel)]="data.title" name="title" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Author</mat-label>
+      <input matInput [(ngModel)]="data.author" name="author" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Available Copies</mat-label>
+      <input matInput type="number" [(ngModel)]="data.availableCopies" name="availableCopies" required />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button color="warn" [mat-dialog-close]="'delete'">Delete</button>
+  <button mat-button color="primary" [mat-dialog-close]="data">Save</button>
+</mat-dialog-actions>

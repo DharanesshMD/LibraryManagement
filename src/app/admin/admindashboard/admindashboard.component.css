@@ -1,0 +1,61 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background-image: url('/assets/book-bottom.jpg'); /* Replace with your image path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 20px;
+}
+
+.admin-dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(0, 0, 0, 0.6); */
+  z-index: 1;
+}
+
+.h1, h2{
+  margin-left: 20px;
+}
+
+mat-card {
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2; /* Ensures cards are above the background overlay */
+  background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background for cards */
+}
+
+/* Ensure all text is black */
+
+.admin-dashboard label,
+/* .admin-dashboard input, */
+.admin-dashboard td,
+.admin-dashboard th {
+  color: black !important;
+}
+
+mat-form-field {
+  color: black !important;
+}
+
+table {
+  width: 100%;
+  background-color: white;
+}
+
+h3, p{
+  margin-left: 10px;
+}
+
+.edit-profile{
+  margin-bottom: 10px;
+}
+
+.right{
+  margin-left: 10px;
+}

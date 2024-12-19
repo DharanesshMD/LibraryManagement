@@ -1,0 +1,99 @@
+<div class="user-dashboard">
+
+  <mat-card *ngIf="userProfile">
+    <h2>Profile Details</h2>
+    <div class="profile-header">
+      <p>
+        <strong>Name:</strong>
+        <span class="right" *ngIf="!isEditingProfile">{{ userProfile.name }}</span>
+        <input class="right" *ngIf="isEditingProfile" [(ngModel)]="userProfile.name" />
+      </p>
+      <p>
+        <strong>Email:</strong>
+        <span class="right" *ngIf="!isEditingProfile">{{ userProfile.email }}</span>
+        <input class="right" *ngIf="isEditingProfile" [(ngModel)]="userProfile.email" />
+      </p>
+      <p>
+        <strong>Password:</strong>
+        <span class="right" *ngIf="!isEditingProfile">{{ maskedPassword }}</span>
+        <input class="right" *ngIf="isEditingProfile" type="password" [(ngModel)]="userProfile.password" />
+      </p>
+      <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    (click)="toggleEditProfile()"
+    title="Edit Profile"
+    style="cursor: pointer; float: left; width: 20px; height: 20px; margin-top: -170px; margin-left: 180px;"
+  >
+    <path
+      d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"
+    ></path>
+  </svg>
+  
+    </div>
+    <button *ngIf="isEditingProfile" mat-raised-button color="primary" (click)="saveProfile()">Save</button>
+    <button *ngIf="isEditingProfile" mat-raised-button color="warn" (click)="cancelEdit()">Cancel</button>
+  </mat-card>
+
+    <mat-card>
+      <h2>Available Books</h2>
+      <table mat-table [dataSource]="availableBooks" class="mat-elevation-z8">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let book"> {{ book.title }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef> Author </th>
+          <td mat-cell *matCellDef="let book"> {{ book.author }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="availableCopies">
+          <th mat-header-cell *matHeaderCellDef> Stock Available </th>
+          <td mat-cell *matCellDef="let book"> {{ book.availableCopies }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let book">
+            <button mat-raised-button (click)="borrowBook(book)">Borrow</button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="availableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: availableColumns;"></tr>
+      </table>
+    </mat-card>
+  
+    <mat-card>
+      <h2>Borrowed Books</h2>
+      <table mat-table [dataSource]="borrowedBooks" class="mat-elevation-z8">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let borrowedBook"> {{ borrowedBook.book.title }} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="author">
+          <th mat-header-cell *matHeaderCellDef> Author </th>
+          <td mat-cell *matCellDef="let borrowedBook"> {{ borrowedBook.book.author }} </td>
+        </ng-container>
+        
+
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef> Quantity </th>
+          <td mat-cell *matCellDef="let book"> {{ book.quantity }} </td>
+        </ng-container>        
+  
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Action </th>
+          <td mat-cell *matCellDef="let book">
+            <button mat-raised-button (click)="returnBook(book)">Return</button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="borrowedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: borrowedColumns;"></tr>
+      </table>
+    </mat-card>
+  </div>
+  
