@@ -61,7 +61,7 @@ export class BookService {
   private borrowedBooks: { [userId: number]: BorrowedBook[] } = {};
 
   private borrowingHistorySubject = new BehaviorSubject<BorrowingRecord[]>([]);
-  // private borrowingHistory: BorrowingRecord[] = [];
+  
 
   private currentUserName: string = '';
 
@@ -117,10 +117,10 @@ export class BookService {
   getBorrowedBooksObservable(userId: number): Observable<{ book: Book; quantity: number }[]> {
     return this.activeBookBorrowsSubject.pipe(
       map(borrows => {
-        // Filter borrows for this user
+        
         const userBorrows = borrows.filter(record => record.userId === userId);
         
-        // Convert to the expected format
+        
         return userBorrows.map(record => ({
           book: this.books.find(b => b.id === record.bookId) || {
             id: record.bookId,
@@ -158,19 +158,19 @@ export class BookService {
   borrowBook(userId: number, bookId: number, copies: number): Observable<void> {
     const book = this.books.find((b) => b.id === bookId);
     if (book && book.availableCopies >= copies) {
-      // Update available copies
+      
       book.availableCopies -= copies;
 
-      // Check if user already has this book borrowed
+      
       const existingBorrowIndex = this.activeBookBorrows.findIndex(
         record => record.userId === userId && record.bookId === bookId
       );
 
       if (existingBorrowIndex !== -1) {
-        // Update existing borrow record
+        
         this.activeBookBorrows[existingBorrowIndex].quantity += copies;
       } else {
-        // Add new borrow record
+        
         const borrowRecord: BorrowRecord = {
           userId,
           userName: this.userNameMap.get(userId) || 'Unknown User',
@@ -181,7 +181,7 @@ export class BookService {
         this.activeBookBorrows.push(borrowRecord);
       }
 
-      // Update subjects
+      
       this.activeBookBorrowsSubject.next([...this.activeBookBorrows]);
       this.booksSubject.next([...this.books]);
     }
@@ -196,7 +196,7 @@ export class BookService {
   }[]> {
     return this.activeBookBorrowsSubject.pipe(
       map((borrows) => {
-        // Group by bookId
+        
         const bookGroups = borrows.reduce((groups, record) => {
           if (!groups[record.bookId]) {
             groups[record.bookId] = {
@@ -257,10 +257,10 @@ export class BookService {
   ): Observable<void> {
     const book = this.books.find((b) => b.id === bookId);
     if (book) {
-      // Update available copies
+      
       book.availableCopies += copies;
 
-      // Update active borrows
+      
       const borrowIndex = this.activeBookBorrows.findIndex(
         record => record.userId === userId && record.bookId === bookId
       );
@@ -270,12 +270,12 @@ export class BookService {
         record.quantity -= copies;
         
         if (record.quantity <= 0) {
-          // Remove the record if no copies left
+          
           this.activeBookBorrows.splice(borrowIndex, 1);
         }
       }
 
-      // Add return record
+      
       const returnRecord: ReturnedBookRecord = {
         userId,
         userName: this.userNameMap.get(userId) || userName,
@@ -286,7 +286,7 @@ export class BookService {
       };
       this.returnedBooksHistory.push(returnRecord);
 
-      // Update all subjects
+      
       this.activeBookBorrowsSubject.next([...this.activeBookBorrows]);
       this.returnedBooksSubject.next([...this.returnedBooksHistory]);
       this.booksSubject.next([...this.books]);

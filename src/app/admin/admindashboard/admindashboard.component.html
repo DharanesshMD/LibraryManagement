@@ -1,20 +1,5 @@
 <div class="admin-dashboard">
 
-  <!-- Profile Section -->
-  <!-- <mat-card>
-    <h2>Profile Details</h2>
-    <p><strong>Name:</strong> {{ adminProfile?.name }} <span>({{ adminProfile?.role }})</span></p>
-    <p><strong>Email:</strong> {{ adminProfile?.email }}</p>
-    <p>
-      <strong>Password:</strong> 
-      <span class="password" *ngIf="!showPassword">{{ maskedPassword }}</span>
-      <span class="password" *ngIf="showPassword">{{ adminProfile?.password }}</span>
-      <button mat-button color="primary" (click)="togglePasswordVisibility()">
-        {{ showPassword ? 'Hide' : 'Show' }}
-      </button>
-    </p>
-  </mat-card> -->
-
   <mat-card *ngIf="adminProfile">
   <h2>Profile Details</h2>
   <div class="profile-header">
