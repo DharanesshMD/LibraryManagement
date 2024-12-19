@@ -11,14 +11,6 @@ export interface User {
     borrowedBooks: BorrowedBook[];
   }  
 
-  // export interface BorrowedBook {
-  //   bookId: number;
-  //   title: string;
-  //   author: string;
-  //   quantity: number;
-  //   borrowDate: Date;
-  // }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -57,7 +49,7 @@ export class AuthService {
     return [...this.users];
   }
 
-  // Your existing methods...
+  
   getUserById(userId: number): User | undefined {
     return this.users.find(user => user.id === userId);
   }

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog'; // Import MatDialog
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'; 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { BookService, Book, ReturnedBookRecord } from '../../shared/book.service';
@@ -13,6 +12,7 @@ import { AuthService, User } from '../../shared/auth.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Subscription } from 'rxjs';
 import { EditUserDialogComponent } from '../edit-user-dialog/edit-user-dialog.component';
+import { MatTableModule } from '@angular/material/table';
 
 interface BorrowedBookRecord {
   userId: number;
@@ -30,12 +30,13 @@ interface BorrowedBookRecord {
     CommonModule,
     MatCardModule,
     MatButtonModule,
-    MatTableModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     MatDialogModule,
     FontAwesomeModule,
+    MatTableModule,
+    MatDialogModule
   ],
   templateUrl: './admindashboard.component.html',
   styleUrls: ['./admindashboard.component.css'],
@@ -70,7 +71,7 @@ export class AdminDashboardComponent implements OnInit {
     private bookService: BookService,
     private dialog: MatDialog,
     public authService: AuthService
-  ) {} // Inject MatDialog and AuthService
+  ) {} 
 
   ngOnInit() {
     this.loadBooks();
@@ -98,8 +99,8 @@ export class AdminDashboardComponent implements OnInit {
             userName: user.userName,
             bookId: status.bookId,
             bookTitle: this.getBookTitle(status.bookId),
-            quantity: status.totalBorrowed / status.borrowedBy.length, // Distribute quantity evenly
-            borrowDate: new Date(), // Example: Replace with actual borrow date if tracked in the service
+            quantity: status.totalBorrowed / status.borrowedBy.length, 
+            borrowDate: new Date(), 
           });
         });
       });
@@ -119,7 +120,7 @@ export class AdminDashboardComponent implements OnInit {
 
   saveProfile() {
     if (this.adminProfile) {
-      // Ensure password masking after saving
+      
       this.maskPassword();
       this.isEditingProfile = false;
       alert('Profile updated successfully!');
@@ -128,7 +129,7 @@ export class AdminDashboardComponent implements OnInit {
 
   cancelEdit() {
     this.isEditingProfile = false;
-    this.adminProfile = this.authService.getLoggedInUser(); // Reset to original profile data
+    this.adminProfile = this.authService.getLoggedInUser(); 
     this.maskPassword();
   }
 
@@ -169,9 +170,9 @@ export class AdminDashboardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'delete') {
-        this.deleteBook(book.id); // Handle delete action
+        this.deleteBook(book.id); 
       } else if (result) {
-        this.bookService.editBook(book.id, result); // Handle save action
+        this.bookService.editBook(book.id, result); 
         this.loadBooks();
       }
     });
@@ -179,12 +180,9 @@ export class AdminDashboardComponent implements OnInit {
 
   deleteBook(bookId: number) {
     this.bookService.deleteBook(bookId);
-    this.loadBooks(); // Reload the book list after deletion
+    this.loadBooks(); 
   }
 
-  // getBookTitle(bookId: number): string {
-  //   return this.books.find(book => book.id === bookId)?.title || 'Unknown Book';
-  // }
 
   getUserName(userId: number): string {
     const user = this.users.find(user => user.id === userId);
@@ -198,8 +196,8 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
   
-  openEditUserDialog(userId: number) {
-    const user = this.users.find((u) => u.id === userId);
+  openEditUserDialog(userName: string) {
+    const user = this.users.find((u) => u.name === userName);
     if (user) {
       const dialogRef = this.dialog.open(EditUserDialogComponent, {
         width: '400px',
@@ -219,7 +217,7 @@ export class AdminDashboardComponent implements OnInit {
     if (index !== -1) {
       this.users[index] = updatedUser;
       console.log('User updated:', updatedUser);
-      // Update any dependent data if needed
+      
     }
   }
   

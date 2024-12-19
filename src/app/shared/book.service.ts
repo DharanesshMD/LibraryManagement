@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
-// import { User } from './auth.service';
+
 
 export interface Book {
   id: number;
@@ -12,7 +12,7 @@ export interface Book {
 export interface BorrowedBook {
   book: Book;
   quantity: number;
-  borrowDate: Date; // Added borrow date
+  borrowDate: Date; 
 }
 
 export interface BorrowingRecord {
@@ -57,7 +57,9 @@ export class BookService {
 
   private currentUserName: string = '';
 
-  private users: User[] = []; // Add this property
+  private userNameMap: Map<number, string> = new Map();
+
+  private users: User[] = []; 
   private usersSubject = new BehaviorSubject<User[]>([]);
 
   private returnedBooksHistory: ReturnedBookRecord[] = [];
@@ -80,14 +82,14 @@ export class BookService {
     return this.borrowingHistorySubject.asObservable();
   }
 
-  // New method to get borrowing records for a specific user
+  
   getUserBorrowingRecords(userId: number): Observable<BorrowingRecord[]> {
     return this.borrowingHistorySubject.pipe(
       map(records => records.filter(record => record.userId === userId))
     );
   }
 
-  // New method to get current borrowed books stats
+  
   getBorrowingStats(): Observable<{
     totalBorrowed: number;
     uniqueUsers: number;
@@ -124,10 +126,10 @@ export class BookService {
   }
 
   addBook(book: Book): Observable<void> {
-    // Add the new book to the list
+    
     this.books.push(book);
     
-    // Update the BehaviorSubject with the new list
+    
     this.booksSubject.next([...this.books]);
     
     return new Observable(observer => {
@@ -140,7 +142,7 @@ export class BookService {
     const index = this.books.findIndex((b) => b.id === bookId);
     if (index !== -1) {
       this.books[index] = updatedBook;
-      this.booksSubject.next([...this.books]); // Notify subscribers
+      this.booksSubject.next([...this.books]); 
     }
   }
 
@@ -200,7 +202,7 @@ export class BookService {
             status[book.id].totalBorrowed += quantity;
             status[book.id].borrowedBy.push({ 
               userId: Number(userId), 
-              userName: this.currentUserName
+              userName: this.userNameMap.get(Number(userId)) || 'Unknown User'
             });
           });
         });
@@ -217,25 +219,25 @@ export class BookService {
 
   deleteBook(bookId: number): void {
     this.books = this.books.filter((book) => book.id !== bookId);
-    this.booksSubject.next([...this.books]); // Notify subscribers of the updated book list
+    this.booksSubject.next([...this.books]); 
   }
   
   setUserInfo(userId: number, userName: string) {
-    this.currentUserName = userName;
+    this.userNameMap.set(userId, userName);
   }
 
-  // Add this method to get user name by ID
+  
   getUserById(userId: number): User | undefined {
     return this.users.find(user => user.id === userId);
   }
 
-  // Add method to set users (you might call this when initializing your app)
+  
   setUsers(users: User[]) {
     this.users = users;
     this.usersSubject.next([...this.users]);
   }
 
-  // Add method to get all users if needed
+  
   getUsers(): Observable<User[]> {
     return this.usersSubject.asObservable();
   }
@@ -249,10 +251,8 @@ export class BookService {
   ): Observable<void> {
     const book = this.books.find((b) => b.id === bookId);
     if (book) {
-      // Update available copies
       book.availableCopies += copies;
   
-      // Update borrowed books
       if (this.borrowedBooks[userId]) {
         const borrowedEntry = this.borrowedBooks[userId].find(
           (entry) => entry.book.id === bookId
@@ -267,10 +267,9 @@ export class BookService {
         }
       }
   
-      // Add to returned books history
       const returnRecord: ReturnedBookRecord = {
         userId,
-        userName,
+        userName: this.userNameMap.get(userId) || userName,
         bookId,
         bookName,
         quantity: copies,
@@ -279,7 +278,6 @@ export class BookService {
       this.returnedBooksHistory.push(returnRecord);
       this.returnedBooksSubject.next([...this.returnedBooksHistory]);
   
-      // Update histories and states
       this.updateState(userId);
       this.borrowingHistorySubject.next([...this.borrowingHistory]);
     }

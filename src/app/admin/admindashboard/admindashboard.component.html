@@ -110,41 +110,36 @@
 
   <mat-card>
     <h2>Currently Borrowed Books</h2>
-  <table mat-table [dataSource]="borrowedBooks" class="mat-elevation-z8">
-    <ng-container matColumnDef="userName">
-      <th mat-header-cell *matHeaderCellDef> User Name </th>
-      <td mat-cell *matCellDef="let record">
-        <a (click)="openEditUserDialog(record.userId)" style="cursor: pointer; text-decoration: underline; color: rgb(0, 62, 231);">
-          {{ record.userName }}
-        </a>
-      </td>
-    </ng-container>
+    <table mat-table [dataSource]="borrowedBooks" class="mat-elevation-z8">
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef> User Name </th>
+        <td mat-cell *matCellDef="let record">
+          <a (click)="openEditUserDialog(record.userName)" style="cursor: pointer; text-decoration: underline; color: rgb(0, 62, 231);">
+            {{ record.userName }}
+          </a>
+        </td>
+      </ng-container>
   
       <ng-container matColumnDef="bookTitle">
         <th mat-header-cell *matHeaderCellDef> Book Title </th>
-        <td mat-cell *matCellDef="let record"> 
-          {{ record.bookTitle }}
-        </td>
+        <td mat-cell *matCellDef="let record">{{ record.bookTitle }}</td>
       </ng-container>
   
       <ng-container matColumnDef="quantity">
         <th mat-header-cell *matHeaderCellDef> Quantity </th>
-        <td mat-cell *matCellDef="let record"> {{ record.quantity }} </td>
+        <td mat-cell *matCellDef="let record">{{ record.quantity }}</td>
       </ng-container>
   
       <ng-container matColumnDef="borrowDate">
         <th mat-header-cell *matHeaderCellDef> Borrow Date </th>
-        <td mat-cell *matCellDef="let record"> {{ record.borrowDate | date:'short' }} </td>
+        <td mat-cell *matCellDef="let record">{{ record.borrowDate | date: 'short' }}</td>
       </ng-container>
   
       <tr mat-header-row *matHeaderRowDef="borrowedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: borrowedColumns;"></tr>
     </table>
-  
-    <div *ngIf="borrowedBooks.length === 0" class="no-records">
-      <p>No books are currently borrowed.</p>
-    </div>
   </mat-card>
+  
   
 
   <mat-card>
@@ -153,7 +148,7 @@
     <ng-container matColumnDef="userName">
       <th mat-header-cell *matHeaderCellDef> User Name </th>
       <td mat-cell *matCellDef="let detail">
-        <a (click)="openEditUserDialog(detail.userId)" style="cursor: pointer; text-decoration: underline; color: rgb(0, 62, 231);">
+        <a (click)="openEditUserDialog(detail.userName)" style="cursor: pointer; text-decoration: underline; color: rgb(0, 62, 231);">
           {{ detail.userName }}
         </a>
       </td>
